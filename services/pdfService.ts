@@ -1,9 +1,11 @@
+
 import { PDFDocument, degrees } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 import { PageItem } from '../types';
 
 // Initialize PDF.js worker
-const PDFJS_VERSION = '5.4.449'; 
+// Using version 4.10.38 to match package.json dependencies
+const PDFJS_VERSION = '4.10.38'; 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.mjs`;
 
 /**
@@ -23,8 +25,6 @@ const getPdfjsDoc = async (file: File, fileId: string): Promise<pdfjsLib.PDFDocu
   const arrayBuffer = await file.arrayBuffer();
   const loadingTask = pdfjsLib.getDocument({ 
     data: arrayBuffer,
-    // Optimization for large files: use range requests if possible (though usually not for local files)
-    // and disable auto-fetch
     disableAutoFetch: true,
     disableStream: false,
   });
@@ -117,6 +117,5 @@ export const createMergedPDF = async (items: PageItem[], filesMap: Map<string, F
     mergedPdf.addPage(copiedPage);
   }
 
-  // Use save() instead of saveAsBase64 for better performance with large files
   return await mergedPdf.save();
 };
