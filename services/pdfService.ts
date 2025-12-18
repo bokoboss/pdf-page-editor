@@ -74,10 +74,11 @@ export const renderPageToDataURL = async (
   canvas.height = viewport.height;
   canvas.width = viewport.width;
 
+  // Cast to any to avoid type mismatch with pdfjs-dist RenderParameters
   await page.render({
     canvasContext: context,
     viewport: viewport,
-  }).promise;
+  } as any).promise;
 
   const dataUrl = canvas.toDataURL('image/jpeg', 0.8); // Use JPEG for smaller thumbnail memory footprint
   
