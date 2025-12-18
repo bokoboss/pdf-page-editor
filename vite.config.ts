@@ -1,12 +1,17 @@
-
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: './', // สำคัญมาก: บอกให้ใช้ relative path เพื่อให้รันบน GitHub Pages ได้
+  base: './', 
   build: {
     outDir: 'dist',
+    target: 'esnext', // สำคัญมาก: pdfjs-dist v4 ต้องการ esnext
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'esnext',
+    },
   },
   server: {
     port: 3000

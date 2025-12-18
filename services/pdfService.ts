@@ -1,10 +1,9 @@
-
 import { PDFDocument, degrees } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 import { PageItem } from '../types';
 
 // Initialize PDF.js worker
-// Using version 4.10.38 to match package.json dependencies
+// We use the CDN directly to avoid bundling issues with Vite/Rollup
 const PDFJS_VERSION = '4.10.38'; 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.mjs`;
 
@@ -13,7 +12,6 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${PDFJS_V
  * for every thumbnail request.
  */
 const pdfjsDocCache = new Map<string, pdfjsLib.PDFDocumentProxy>();
-const pdfLibDocCache = new Map<string, PDFDocument>();
 
 /**
  * Get or load a PDF.js document proxy
@@ -35,7 +33,6 @@ const getPdfjsDoc = async (file: File, fileId: string): Promise<pdfjsLib.PDFDocu
 
 export const clearPdfCache = () => {
   pdfjsDocCache.clear();
-  pdfLibDocCache.clear();
 };
 
 export const getPDFPageCount = async (file: File): Promise<number> => {
